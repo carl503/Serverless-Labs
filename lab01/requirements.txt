@@ -4,3 +4,4 @@ sqlalchemy==1.4
 pymysql==1.0.2
 numpy==1.20.1
 pandas==1.2.4
+py-cpuinfo==8.0.0
