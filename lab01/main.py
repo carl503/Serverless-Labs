@@ -61,10 +61,8 @@ db = init_db_connection()
 
 def entrypoint(request):
     if request.path == "/recommend" and request.method == "GET":
+        save_movie()
         return create_recommendation()
-
-    elif request.method == "POST":
-        return save_movie()
     
     elif request.method == "GET":
         print(request.path)
