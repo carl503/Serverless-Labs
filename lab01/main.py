@@ -30,9 +30,9 @@ def init_db_connection():
     )
 
     with pool.connect() as conn:
-        conn.execute("DROP TABLE IF EXISTS movies;")
+        #conn.execute("DROP TABLE IF EXISTS movies;")
         conn.execute(
-            "CREATE TABLE movies "
+            "CREATE TABLE IF NOT EXISTS movies "
             "( id int NOT NULL, title varchar(255) NOT NULL, "
             "languages varchar(255) NOT NULL, "
             "genres varchar(255) NOT NULL, "
@@ -42,10 +42,10 @@ def init_db_connection():
             "PRIMARY KEY (id) );"
         )
 
-        conn.execute("DROP TABLE IF EXISTS ratings;")
+        #conn.execute("DROP TABLE IF EXISTS ratings;")
         conn.execute(
             """
-            CREATE TABLE ratings(
+            CREATE TABLE IF NOT EXISTS ratings(
             id     INTEGER  NOT NULL
             ,user   VARCHAR(9) NOT NULL
             ,rating NUMERIC(4,1) NOT NULL
