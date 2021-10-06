@@ -64,6 +64,11 @@ def entrypoint(request):
         save_movie()
         return create_recommendation()
 
+    elif request.path == "/cpu" and request.method == "GET":
+        save_movie()
+        create_recommendation()
+        return get_cpu_information()
+
     elif request.path == "/clear" and request.method == "POST":
         return clear_data()
     
@@ -152,3 +157,7 @@ def clear_data():
         conn.execute("DROP TABLE IF EXISTS ratings;")
         conn.execute("DROP TABLE IF EXISTS movies;")
     return "gone"
+
+def get_cpu_information():
+    with open("/proc/cpuinfo", "r") as file:
+        return file.readlines()
