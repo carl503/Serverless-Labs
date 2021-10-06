@@ -159,5 +159,7 @@ def clear_data():
     return "gone"
 
 def get_cpu_information():
+    ret = "Start Test \n"
     with open("/proc/cpuinfo", "r") as file:
-        return file.readlines()
+        ret +=  file.readlines()
+    ret += "\n"
