@@ -63,6 +63,9 @@ def entrypoint(request):
     if request.path == "/recommend" and request.method == "GET":
         save_movie()
         return create_recommendation()
+
+    elif request.path == "/clear" and request.method == "POST":
+        return clear_data()
     
     elif request.method == "GET":
         return get_movies(request)
@@ -142,3 +145,10 @@ def save_movie():
             conn.execute(rating)
 
     return ret
+
+def clear_data():
+    global db
+    with db.connect() as conn:
+        conn.execute("DROP TABLE IF EXISTS ratings;")
+        conn.execute("DROP TABLE IF EXISTS movies;")
+    return "gone"
