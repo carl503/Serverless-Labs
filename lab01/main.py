@@ -65,7 +65,6 @@ def entrypoint(request):
         return create_recommendation()
     
     elif request.method == "GET":
-        print(request.path)
         return get_movies(request)
 
 def get_movies(request):
@@ -132,6 +131,10 @@ def save_movie():
     global db
     ret = ""
     with db.connect() as conn, open("movies.sql", "r") as movies, open("ratings.sql", "r") as ratings:
+        if conn.execute("SELECT COUNT(*) from movies").scalar() > 0:
+            print("returning, entries already in db")
+            return
+
         for movie in movies:
             conn.execute(movie)
 
