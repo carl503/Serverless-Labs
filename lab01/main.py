@@ -5,6 +5,7 @@ import datetime
 from recommender import *
 import pandas as pd
 from flask import jsonify
+from cpuinfo import get_cpu_info_json
 
 logger = logging.getLogger()
 
@@ -12,7 +13,7 @@ def init_db_connection():
     db_user = os.environ.get("DB_USER", "scad")
     db_pass = os.environ.get("DB_PASS", "scad")
     db_name = os.environ.get("DB_NAME", "scad")
-    db_host = os.environ.get("DB_HOST", "localhost:3306")
+    db_host = os.environ.get("DB_HOST1", "localhost:3306")
 
     host_args = db_host.split(":")
     db_hostname, db_port = host_args[0], int(host_args[1])
@@ -159,7 +160,4 @@ def clear_data():
     return "gone"
 
 def get_cpu_information():
-    ret = "Start Test \n"
-    with open("/proc/cpuinfo", "r") as file:
-        ret +=  file.readlines()
-    ret += "\n"
+    return get_cpu_info_json()
