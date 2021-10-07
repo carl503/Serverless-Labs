@@ -32,9 +32,13 @@ To assure that the whole ratings.sql is used the database was cleared manually b
 
 The same code base and input data as in E0 was taken. We decided to measure the response difference of the input data again but this time by increasing the memory for each measurement.
 
-### Experiment E8 - Usage pattern
+### Experiment E8 - Processor Affinity
 
-No more time
+**Disclaimer: We tried to measure this point but unfortunately we failed to gain meaningful results. Because of this we ran out of time to replace this experiment.** 
+
+We decided to include the package py-cpuinfo to parse the cpu information properly. We wrote a custom function which allows us to read the brand name of the cpu as well as the frequency. With this data we want to analyze what Processors GCF is using as well as if the interval of invocations would also lead to differences.
+
+
 
 ## Procedure
 
@@ -96,11 +100,9 @@ if __name__ == "__main__":
 
 The same measurement script as in E0 was used. We started with 128 MB of memory and then increased the memory each measurement up until we reached the memory limit of 8192 MB.
 
-### Experiment E8 - Usage pattern
+### Experiment E8 - Processor Affinity
 
-No more time
-
-
+We were invoking our recommender like before in E0, but this time we changed the output. Instead of the recommendations we returned the json encoded cpu information for further processing.
 
 
 
@@ -132,6 +134,134 @@ We tried to measure our cloud function with a memory allocation of 128 MB of ram
 
 
 
-### Experiment E8 - Usage pattern
+### Experiment E8 - Processor Affinity
 
-No more time
+The cpu affinity could not be measured to a satisfying point.  After many complications to read "/proc/cpuinfo" we achieved to get some results. Unfortunately the results looked each time more or less the same. We know that the cpu speed was always between 2.7 and 2.8 GHz but as shown below the brand name is missing. Because of the missing brand name it was not possible to measure how many different cpu types GCF is using. We only know that they run Intel processors most likely Xeons. The missing brand name could be a result of visualization where the brand was not provided by the hypervisor.
+
+
+
+```json
+{
+  "python_version": "3.9.7.final.0 (64 bit)",
+  "cpuinfo_version": [
+    8,
+    0,
+    0
+  ],
+  "cpuinfo_version_string": "8.0.0",
+  "arch": "X86_64",
+  "bits": 64,
+  "count": 2,
+  "arch_string_raw": "x86_64",
+  "vendor_id_raw": "GenuineIntel",
+  "brand_raw": "unknown",
+  "hz_advertised_friendly": "2.7002 GHz",
+  "hz_actual_friendly": "2.7002 GHz",
+  "hz_advertised": [
+    2700237000,
+    0
+  ],
+  "hz_actual": [
+    2700237000,
+    0
+  ],
+  "model": 85,
+  "family": 6,
+  "flags": [
+    "3dnowprefetch",
+    "abm",
+    "acpi",
+    "adx",
+    "aes",
+    "apic",
+    "avx",
+    "avx2",
+    "avx512bw",
+    "avx512cd",
+    "avx512dq",
+    "avx512f",
+    "avx512vl",
+    "bmi1",
+    "bmi2",
+    "clflush",
+    "clwb",
+    "cmov",
+    "cqm",
+    "cx16",
+    "cx8",
+    "dca",
+    "de",
+    "ds_cpl",
+    "dtes64",
+    "dts",
+    "erms",
+    "est",
+    "f16c",
+    "fma",
+    "fpu",
+    "fsgsbase",
+    "fxsr",
+    "hle",
+    "ht",
+    "invpcid",
+    "lahf_lm",
+    "lm",
+    "mca",
+    "mce",
+    "mmx",
+    "monitor",
+    "movbe",
+    "mpx",
+    "msr",
+    "mtrr",
+    "nx",
+    "pae",
+    "pat",
+    "pbe",
+    "pcid",
+    "pclmulqdq",
+    "pdcm",
+    "pdpe1gb",
+    "pge",
+    "pku",
+    "pni",
+    "popcnt",
+    "pse",
+    "pse36",
+    "rdrand",
+    "rdseed",
+    "rdt_a",
+    "rdtscp",
+    "rtm",
+    "sdbg",
+    "sep",
+    "smap",
+    "smep",
+    "smx",
+    "ss",
+    "sse",
+    "sse2",
+    "sse4_1",
+    "sse4_2",
+    "ssse3",
+    "syscall",
+    "tm",
+    "tm2",
+    "tsc",
+    "tsc_adjust",
+    "tsc_deadline_timer",
+    "vme",
+    "vmx",
+    "x2apic",
+    "xgetbv1",
+    "xsave",
+    "xsavec",
+    "xsaveopt",
+    "xsaves",
+    "xtpr"
+  ]
+}
+```
+
+
+
