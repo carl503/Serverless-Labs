@@ -63,7 +63,7 @@ db = init_db_connection()
 def entrypoint(request):
     if request.path == "/recommend" and request.method == "GET":
         save_movie()
-        return create_recommendation()
+        return create_recommendation(int(request.args.get("limit", default=0)))
 
     elif request.path == "/cpu" and request.method == "GET":
         save_movie()
@@ -91,11 +91,15 @@ def get_movies(request):
             })
     return jsonify(ret)
 
-def create_recommendation():
+def create_recommendation(limit=0):
     recommendations = []
     with db.connect() as conn:
-        df_uratings = pd.read_sql("SELECT * from ratings", conn)
-        df_movies = pd.read_sql("SELECT * from movies", conn)
+        if limit == 0:
+            df_uratings = pd.read_sql("SELECT * from ratings", conn)
+            df_movies = pd.read_sql("SELECT * from movies", conn)
+        else:
+            df_uratings = pd.read_sql(f"SELECT * from ratings LIMIT {limit}", conn)
+            df_movies = pd.read_sql(f"SELECT * from movies", conn)
 
         users = set(df_uratings["user"])
         movies = set(df_uratings["id"])
