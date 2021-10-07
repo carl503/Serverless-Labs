@@ -122,15 +122,15 @@ These are the response time results that were measured after 100 url invocations
 
 We measured the correlation between input data and response time of our recommender system. As we can see there is a clear correlation between the amount of input data and the response time it takes. We also tried to increase the power of the GCF by giving it more memory and it seems quite clear, that this only changed the response time but the ratio stays the same.
 
-<img src="C:\Users\carll\Documents\GitHub\scad_labs\lab01\imgs\e1.svg" style="zoom:25%;" />
+<img src="./imgs/e1.svg" style="zoom:25%;" />
 
-<img src="C:\Users\carll\Documents\GitHub\scad_labs\lab01\imgs\e1_1.svg" style="zoom:25%;" />
+<img src="./imgs/e1_1.svg" style="zoom:25%;" />
 
 ### Experiment E2 - Memory Allocation
 
 We tried to measure our cloud function with a memory allocation of 128 MB of ram but we were unable to achieve presentable results. Most of the time the function returned with a bad response thus it was not possible to measure the performance. But we can observe, that from 256 MB onwards the cloud function works quite nicely. As we can see we gain quite a performance improve by upping up the memory from 256 MB to 512 MB. We can say that the response time was reduced by 50 percent. We achieve the same result more or less by increasing the memory from 512 MB to 1024 MB. But if we try to increase the amount of memory from 1024 MB onwards there is no more measurable difference. We believe the reason behind this is that from 1024 MB upwards the CPU frequency may increase but we have to little data to achieve a difference.
 
-<img src="C:\Users\carll\Documents\GitHub\scad_labs\lab01\imgs\e2.svg" style="zoom:25%;" />
+<img src="./imgs/e2.svg" style="zoom:25%;" />
 
 
 
