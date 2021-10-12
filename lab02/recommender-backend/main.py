@@ -63,13 +63,13 @@ db = init_db_connection()
 def entrypoint(request):
     if request.path == "/recommend" and request.method == "GET":
         save_movie()
-        return create_recommendation(int(request.args.get("limit", default=0)))
+        return jsonify(create_recommendation(int(request.args.get("limit", default=0))))
     elif request.path == "/recommend" and request.method == "POST":
         movie_id = request.json["movieID"]
         user = request.json["user"]
         rating = request.json["rating"]
         add_new_rating(movie_id, user, rating)
-        return recommendation_of_user(user)
+        return jsonify(recommendation_of_user(user))
 
     elif request.path == "/cpu" and request.method == "GET":
         save_movie()
@@ -159,7 +159,7 @@ def create_recommendation(limit=0):
                 }
             )
 
-    return jsonify(recommendations)
+    return recommendations
 
     
 def save_movie():
