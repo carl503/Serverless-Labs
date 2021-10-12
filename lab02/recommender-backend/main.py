@@ -65,9 +65,12 @@ def entrypoint(request):
         save_movie()
         return create_recommendation(int(request.args.get("limit", default=0)))
     elif request.path == "/recommend" and request.method == "POST":
-        movie_id, user, rating = request.json
+        movie_id = request.json["movieID"]
+        user = request.json["user"]
+        rating = request.json["rating"]
         add_new_rating(movie_id, user, rating)
         return recommendation_of_user(user)
+        
     elif request.path == "/cpu" and request.method == "GET":
         save_movie()
         create_recommendation()
