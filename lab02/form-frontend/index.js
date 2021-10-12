@@ -16,7 +16,7 @@ const connection = mysql.createConnection({
 exports.entrypoint = (req, res) => {
     if (req.path === "/") {
         if (req.method === "GET") {
-            res.sendFile("/form.html")
+            res.sendFile("/workspace/form.html")
         }
     }
 
