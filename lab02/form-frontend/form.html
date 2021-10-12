@@ -5,28 +5,61 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Movie Recommender</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
     
 </head>
 <body>
 
-    <h1>Recommender</h1>
+    <h1>Movie Recommender</h1>
+
 
     <div class="recommendForm">
+        <div class="field">
+            <label class="label">Username</label>
+            <div class="control">
+                <input class="input" type="text" id="username" placeholder="Carl">
+            </div>
+        </div>
 
-        <label for="username">Username:</label><br>
-        <input type="text" id="username">
 
-        <label for="movieSelect">Movie:</label><br>
-        <select name="movies" id="movieSelect">
+        <div class="field">
+            <label class="label">Movie</label>
+            <div class="control">
+                <div class="select">
+                <select name="movies" id="movieSelect">
             
-        </select>
-        <br>
+                </select>
+                </div>
+            </div>
+        </div>
 
-        <label for="rating">Rating (between 0 and 10):</label><br>
-        <input type="number" name="rating" id="rating" min="0" max="10" step="0.5">
+        <div class="field">
+            <label class="label">Rating</label>
+            <div class="control">
+                <input type="number" name="rating" id="rating" min="0" max="10" step="0.5" placeholder="5">
+            </div>
+        </div>
 
-        <br>
-        <button onclick="submitForm()">Submit</button>
+        <div class="field">
+            <div class="control">
+              <button class="button is-link" onclick="submitForm()" id="submitBtn">Submit</button>
+            </div>
+          </div>
+
+    </div>
+
+    <div id="output">
+        <table class="table is-striped">
+            <thead>
+                <tr>
+                    <th>Recommended Movies</th>
+                </tr>
+            </thead>
+            <tbody id="tableContent">
+
+            </tbody>
+        </table>
     </div>
     
 
@@ -48,6 +81,7 @@
             }
 
             console.log(`Submitting: `, data)
+            $("#submitBtn").prop("disabled", true)
 
             fetch(`${recommendAPIBase}/recommend`, {
                 method: "POST",
@@ -58,7 +92,11 @@
             })
             .then(response => response.json())
             .then(data => {
-                console.log('Success:', data);
+                console.log('Success:', data)
+                for (let i = 0; i < data.length; i++) {
+                    $("#tableContent").append(`<tr><td>${data[i]}</td></tr>`)
+                }
+                $("#submitBtn").prop("disabled", false)
             })
         }
 
@@ -73,7 +111,7 @@
                 
                     for (let i = 0; i < data.length; i++) {
                         data[i];
-                        $("#movieSelect").append(`<option value="${data[i].id}">data[i].title</option>`)
+                        $("#movieSelect").append(`<option value="${data[i].id}">${data[i].title}</option>`)
                     }
                 })
 
