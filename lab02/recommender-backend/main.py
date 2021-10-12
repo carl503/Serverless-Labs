@@ -91,14 +91,12 @@ def add_new_rating(movie_id, user, rating):
 
 
 def recommendation_of_user(current_user):
-    """
     recommendations = []
-    for user, movies in create_recommendation():
+    for element in create_recommendation():
+        user = element["user"]
         if user == current_user:
-            recommendations = movies
+            recommendations = element["movies"]
     return recommendations
-    """
-    return create_recommendation()
 
 
 def get_movies(request):
