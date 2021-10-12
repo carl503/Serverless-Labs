@@ -70,7 +70,7 @@ def entrypoint(request):
         rating = request.json["rating"]
         add_new_rating(movie_id, user, rating)
         return recommendation_of_user(user)
-        
+
     elif request.path == "/cpu" and request.method == "GET":
         save_movie()
         create_recommendation()
@@ -84,7 +84,7 @@ def entrypoint(request):
 
 
 def add_new_rating(movie_id, user, rating):
-    statement = f"INSERT INTO ratings(id,user,rating) VALUES ({movie_id},{user},{rating});"
+    statement = f"INSERT INTO ratings(id,user,rating) VALUES ({movie_id},'{user}',{rating});"
     with db.connect() as conn:
         conn.execute(statement)
 
