@@ -64,7 +64,10 @@ def entrypoint(request):
     if request.path == "/recommend" and request.method == "GET":
         save_movie()
         return create_recommendation(int(request.args.get("limit", default=0)))
-
+    elif request.path == "/recommend" and request.method == "POST":
+        movie_id, user, rating = request_json
+        add_new_rating(request.movie_id, user, rating)
+        return recommendation_of_user(user)
     elif request.path == "/cpu" and request.method == "GET":
         save_movie()
         create_recommendation()
@@ -75,6 +78,22 @@ def entrypoint(request):
     
     elif request.method == "GET":
         return get_movies(request)
+
+
+def add_new_rating(movie_id, user, rating):
+    statement = f"INSERT INTO ratings(id,user,rating) VALUES ({movie_id},{user},{rating});"
+    with db.connect() as conn:
+        conn.execute(statement)
+
+
+
+def recommendation_of_user(current_user):
+    recommendations = []
+    for user, movies in create_recommendation():
+        if user == current_user:
+            recommendations = movies
+    return recommendations
+
 
 def get_movies(request):
     global db
