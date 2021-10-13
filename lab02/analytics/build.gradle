@@ -1,4 +1,7 @@
-apply plugin: 'java'
+plugins {
+    id "java"
+    id "de.schablinski.activejdbc-gradle-plugin" version "1.2"
+}
 
 repositories {
     mavenCentral()
@@ -11,6 +14,8 @@ dependencies {
     // Every function needs this dependency to get the Functions Framework API.
     compileOnly 'com.google.cloud.functions:functions-framework-api:1.0.4'
     implementation 'io.pebbletemplates:pebble:3.1.5'
+    implementation 'org.javalite:activejdbc:3.0-j11'
+    implementation 'mysql:mysql-connector-java:8.0.26'
     // To run function locally using Functions Framework's local invoker
     invoker 'com.google.cloud.functions.invoker:java-function-invoker:1.0.3'
 
