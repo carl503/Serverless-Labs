@@ -46,7 +46,9 @@ public class HelloWorld implements HttpFunction {
         Base.open("com.mysql.cj.jdbc.Driver", url, userName, password);
         if (Base.hasConnection()) {
             List<Movie> movies = Movie.findAll();
+            List<Rating> ratings = Rating.findAll();
             setMovieContext(movies, context);
+            setRatingContext(ratings, context);
         }
         Base.close();
     }
@@ -72,6 +74,22 @@ public class HelloWorld implements HttpFunction {
         stats.put("Average movie rating: ", avg.toString());
         stats.put("Total movies: ", String.valueOf(movies.size()));
 
+
+        context.put("stats", stats);
+    }
+
+    private void setRatingContext(List<Rating> ratings, Map<String, Object> context) {
+        var stats = (Map<String, String>) context.get("stats");
+
+        // Todo
+        /*
+        "Most rated movie(s)"
+        "Least rated movie(s)"
+        "Most user ratings"
+        "Least user ratings"
+         */
+
+        stats.put("Total ratings", String.valueOf(ratings.size()));
 
         context.put("stats", stats);
     }
