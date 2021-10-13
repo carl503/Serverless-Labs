@@ -15,11 +15,21 @@ public class HelloWorld implements HttpFunction {
     public void service(HttpRequest request, HttpResponse response)
             throws IOException {
         BufferedWriter writer = response.getWriter();
-        Template template = new Template("index.html");
+        Template template = new Template("analytics.html");
         template.loadTemplate();
         Map<String, Object> context = new HashMap<>();
-        context.put("test", "waddup");
-
+        Map<String, String> analytics = Map.of(
+                "Average movie rating", "",
+                "Highest rated movie(s)", "",
+                "Lowest rated movie(s)", "",
+                "Most rated movie(s)", "",
+                "Least rated movie(s)", "",
+                "Most user ratings", "",
+                "Least user ratings", "",
+                "Total ratings", "",
+                "Total movies", ""
+        );
+        context.put("stats", analytics);
         writer.write(template.renderTemplate(context));
     }
 }

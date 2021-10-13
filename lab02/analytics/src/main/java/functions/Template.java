@@ -6,10 +6,8 @@ import com.mitchellbosecke.pebble.loader.Loader;
 import com.mitchellbosecke.pebble.template.PebbleTemplate;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
 
@@ -21,21 +19,9 @@ public class Template {
         this.indexFile = Path.of(indexFile);
     }
 
-    public void loadTemplate() throws IOException {
-        if (Files.exists(indexFile)) {
-            InputStream is = HelloWorld
-                    .class
-                    .getClassLoader()
-                    .getResourceAsStream(indexFile.getFileName().toString());
-
-            if (is == null)
-                throw new IOException("indexFile could not be loaded from resource");
-            Files.delete(indexFile);
-            Files.copy(is, indexFile);
-        }
-
+    public void loadTemplate() {
         Loader<String> loader = new FileLoader();
-        loader.setPrefix("./");
+        loader.setPrefix("./templates");
         PebbleEngine engine = new PebbleEngine
                 .Builder()
                 .loader(loader)

@@ -1,0 +1,14 @@
+{% extends "index.html" %}
+
+{% block content %}
+{% for stat in stats %}
+<div class="columns">
+    <div class="column">
+        {{ stat.key }}
+    </div>
+    <div class="column">
+        {{ stat.value }}
+    </div>
+</div>
+{% endfor %}
+{% endblock %}
