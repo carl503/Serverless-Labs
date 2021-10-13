@@ -11,7 +11,12 @@ public class HelloWorld implements HttpFunction {
     @Override
     public void service(HttpRequest request, HttpResponse response)
             throws IOException {
+
         BufferedWriter writer = response.getWriter();
-        writer.write("Hello World!");
+        if (request.getPath().equals("/test")) {
+            writer.write("Testy test");
+        } else {
+            writer.write("Hello World!");
+        }
     }
 }
