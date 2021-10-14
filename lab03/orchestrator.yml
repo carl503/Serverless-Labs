@@ -1,0 +1,6 @@
+functions:
+  prewarm: true
+
+  functions:
+    name: "f1"
+    
