@@ -26,6 +26,6 @@ The analytics tool should provide a basic protection, so that authenticity can b
 
 If you try to visit the analytics page using our super secret password "password" the function will provide you the following data:
 
-![frontend1](./imgs/frontend1.png)
+![frontend1](./imgs/analytics1.png)
 
 If you want to have a look by yourself, feel again free to checkout out the analytics page: [Analytics](https://europe-west6-scad-zhaw.cloudfunctions.net/lab02-analytics)
