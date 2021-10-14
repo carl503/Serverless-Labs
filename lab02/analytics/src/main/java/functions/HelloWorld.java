@@ -7,12 +7,12 @@ import org.javalite.activejdbc.Base;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class HelloWorld implements HttpFunction {
+    private static final String RATING = "rating";
+    private static final String MOVIE_NAME = "title";
 
     // Simple function to return "Hello World"
     @Override
@@ -56,48 +56,81 @@ public class HelloWorld implements HttpFunction {
     private void setMovieContext(List<Movie> movies, Map<String, Object> context) {
         MovieComparator comparator = new MovieComparator();
         movies.sort(comparator);
-        Map<String, String> stats = new HashMap<>();
+        Map<String, String> stats = new LinkedHashMap<>();
+
+        double avgRating = 0.0;
 
         Movie bestRating = movies.get(movies.size() - 1);
         Movie worstRating = movies.get(0);
 
+        String titleRating = "Name: %s: Rating: %.1f";
         String bestRatingString =
-                String.format("%s: %.1f", bestRating.get("title"), bestRating.getDouble("rating"));
+                String.format(titleRating, bestRating.get(MOVIE_NAME), bestRating.getDouble(RATING));
         String worstMovieString =
-                String.format("%s: %.1f", worstRating.get("title"), worstRating.getDouble("rating"));
+                String.format(titleRating, worstRating.get(MOVIE_NAME), worstRating.getDouble(RATING));
 
+        OptionalDouble opt = movies
+            .stream()
+            .mapToDouble(value -> value.getDouble(RATING))
+            .average();
 
-        Double avg = movies.stream().mapToDouble(value -> value.getDouble("rating")).average().getAsDouble();
+        if (opt.isPresent()) {
+            avgRating = opt.getAsDouble();
+        }
 
         stats.put("Highest rated movie: ", bestRatingString);
         stats.put("Lowest rated movie: ", worstMovieString);
-        stats.put("Average movie rating: ", avg.toString());
+        stats.put("Average movie rating: ", String.format("%.1f", avgRating));
         stats.put("Total movies: ", String.valueOf(movies.size()));
-
 
         context.put("stats", stats);
     }
 
     private void setRatingContext(List<Rating> ratings, Map<String, Object> context) {
-        var stats = (Map<String, String>) context.get("stats");
+        var stats = (LinkedHashMap<String, String>) context.get("stats");
 
-        // Todo
-        /*
-        "Most rated movie(s)"
-        "Least rated movie(s)"
-        "Most user ratings"
-        "Least user ratings"
-         */
+        Set<Integer> movieIds = ratings
+                .stream()
+                .map(rating -> rating.getInteger("id"))
+                .collect(Collectors.toSet());
 
-        stats.put("Total ratings", String.valueOf(ratings.size()));
+        HashMap<Integer, Integer> ratingMap = new HashMap<>();
+        HashMap<Integer, Integer> sortedRatingMap = new LinkedHashMap<>();
+
+        movieIds.forEach(movieId -> ratingMap.put(movieId, 0));
+
+        ratings
+                .stream()
+                .map(rating -> rating.getInteger("id"))
+                .forEach(rating -> ratingMap.computeIfPresent(rating, (key, value) -> ++value));
+
+
+        ratingMap.entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByValue())
+                .forEachOrdered(rating -> sortedRatingMap.put(rating.getKey(), rating.getValue()));
+
+        var it = sortedRatingMap.entrySet().iterator();
+        int leastRatedMovieId = it.next().getKey();
+        int mostRatedMovieId = 0;
+        while (it.hasNext())
+            mostRatedMovieId = it.next().getKey();
+
+
+        String leastRatedMovie = Movie.findFirst("id = ?", leastRatedMovieId).getString(MOVIE_NAME);
+        String mostRatedMovie = Movie.findFirst("id = ?", mostRatedMovieId).getString(MOVIE_NAME);
+
+        stats.put("Total ratings: ", String.valueOf(ratings.size()));
+        stats.put("Most rated movie: ", mostRatedMovie);
+        stats.put("Least rated movie: ", leastRatedMovie);
 
         context.put("stats", stats);
     }
 
-    private class MovieComparator implements Comparator<Movie> {
+    private static class MovieComparator implements Comparator<Movie> {
         @Override
         public int compare(Movie o1, Movie o2) {
-            return o1.getDouble("rating").compareTo(o2.getDouble("rating"));
+            return o1.getDouble(RATING).compareTo(o2.getDouble(RATING));
         }
     }
 }
