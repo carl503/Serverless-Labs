@@ -1,4 +1,4 @@
-const fetch = require("node-fetch")
+import fetch from 'node-fetch';
 
 const mockarooAPI = `https://my.api.mockaroo.com/users.json?key=${process.env.MOCKAROO_KEY}`
 
