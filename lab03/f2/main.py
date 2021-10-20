@@ -3,7 +3,8 @@ import random
 
 def entrypoint(request):
     if request.path == "/":
-        data = request.json
+        
+        data = f"{request.json['first_name']} {request.json['last_name']}"
         shuffled_list = random.shuffle(data)
         return jsonify(shuffled_list)
 
