@@ -2,7 +2,7 @@
   "name": "data-fetcher",
   "version": "1.0.0",
   "description": "",
-  "main": "index.mjs",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: lmao only test in prod\" && exit 1"
   },
