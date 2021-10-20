@@ -21,5 +21,7 @@ exports.entrypoint = async (req, res) => {
             
             res.send(cachedData)
         }
+    } else if (req.path === "/ping") {
+        res.sendStatus(204)
     }
 };

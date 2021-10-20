@@ -1,6 +1,55 @@
-functions:
+orchestrator:
   prewarm: true
+  isParallel: false
 
   functions:
-    name: "f1"
+    f0:
+      name: "Function 0"
+      url: ""
+      output:
+        - f1
+
+    f1:
+      name: "Function 1"
+      url: ""
+      output: 
+        - f2
+        - f3
+
+    f2:
+      name: "Function 2"
+      url: ""
+      output: 
+        - f4
+
+    f3:
+      name: "Function 3"
+      url: ""
+      output: 
+        - f4
+    
+    f4:
+      name: "Function 4"
+      url: ""
+      input:
+        - f3
+        - f2
+      output:
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+
     
