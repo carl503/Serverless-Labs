@@ -4,8 +4,8 @@ import random
 def entrypoint(request):
     if request.path == "/":
         data = request.json
-        shuffled_list = random.shuffle(data)
-        return shuffled_list
+        random.shuffle(data)
+        return jsonify(data)
 
     elif request.path == "/ping":
         return ('', 204)
