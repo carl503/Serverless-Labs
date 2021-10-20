@@ -5,32 +5,32 @@ orchestrator:
   functions:
     f0:
       name: "Function 0"
-      url: ""
+      url: "https://europe-west6-scad-zhaw.cloudfunctions.net/lab03-f0"
       output:
         - f1
 
     f1:
       name: "Function 1"
-      url: ""
+      url: "https://europe-west6-scad-zhaw.cloudfunctions.net/lab03-f2"
       output: 
         - f2
         - f3
 
     f2:
       name: "Function 2"
-      url: ""
+      url: "https://europe-west6-scad-zhaw.cloudfunctions.net/lab03-f1"
       output: 
         - f4
 
     f3:
       name: "Function 3"
-      url: ""
+      url: "https://europe-west6-scad-zhaw.cloudfunctions.net/lab03-f1"
       output: 
         - f4
     
     f4:
       name: "Function 4"
-      url: ""
+      url: "https://europe-west6-scad-zhaw.cloudfunctions.net/lab03-f2"
       input:
         - f3
         - f2

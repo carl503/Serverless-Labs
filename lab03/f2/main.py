@@ -1,11 +1,11 @@
 from flask import jsonify
-import numpy as np
+import random
 
 def entrypoint(request):
     if request.path == "/":
         data = request.json
-        np.random.shuffle(data)
-        return data
+        random.shuffle(data)
+        return jsonify(data)
 
     elif request.path == "/ping":
         return ('', 204)
