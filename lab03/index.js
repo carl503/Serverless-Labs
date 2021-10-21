@@ -42,7 +42,6 @@ async function exec(orchestrator, func, callback, payload) {
     console.log("-----------------------------");
     console.log(payload[0]);
     console.log(payload[5]);
-    console.log("-----------------------------");
     if(output) {
       exec(orchestrator, output[random], callback, payload);
     }
@@ -73,7 +72,7 @@ function prewarm(functions) {
   try {
     for (const key in functions) {
       const func = functions[key];
-      reqPromises.push(axios.get(`${func.url}/ping`));
+      reqPromises.push(axios.get({baseURL: func.url, url: "/ping"}));
     } 
   } catch (e) {
     console.error(e);
