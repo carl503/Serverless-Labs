@@ -2,8 +2,9 @@ const yaml = require('js-yaml');
 const fs   = require('fs');
 const axios = require('axios');
 
+let prewarmActive;
 // Init graph
-async function main() {
+async function main(testMode) {
   try {
     const doc = yaml.load(fs.readFileSync('orchestrator.yml', 'utf8'));
     const orchestrator = doc.orchestrator;
@@ -11,10 +12,27 @@ async function main() {
     const start = Object.keys(functions)[0];
     initGraph(orchestrator, start);
     // Ping to prewarm if configured in orchestrator.yml
-    if (doc.prewarm) prewarm(functions);
+    
+    if (orchestrator.prewarm) await prewarm(functions);
+
+    prewarmActive = orchestrator.prewarm;
+    console.log(`Prewarm: ${prewarmActive ? "Active": "Inactive"}`);
     // Run the functions
-    await exec(orchestrator, start, fetchAndRelayData, null)
+    // function(s);time;
+    if (testMode) {
+      let startTime = Date.now();
+      for (let i = 0; i < 300; i++) {
+        await exec(orchestrator, start, fetchAndRelayData, null);
+        console.log("-".repeat(80));
+      }
+      let endTime = Date.now();
+      logLineToFile(`All;${(endTime - startTime) / 300}`, `log-all-pre-${prewarmActive ? "Active":"Inactive"}.csv`)
+    } else {
+      await exec(orchestrator, start, fetchAndRelayData, null)
+    }
+
   } catch (e) {
+    console.log("Error in main");
     console.error(e);
   }
 }
@@ -38,15 +56,23 @@ async function exec(orchestrator, func, callback, payload) {
     random = Math.floor(Math.random() * length);
   }
   try {
+    // start
+    const startTime = Date.now();
     payload = (await callback(f, payload)).data;
-    console.log("-----------------------------");
-    console.log(payload[0]);
-    console.log(payload[5]);
+    const endTime = Date.now();
+    logLineToFile(`${f.name};${endTime - startTime}`, `log-${prewarmActive ? "prewarm":"noPrewarm"}.csv`)
+
+    console.log(`Function: ${f.name}, Execution time: ${endTime - startTime}ms`)
+    // end
+
     if(output) {
       exec(orchestrator, output[random], callback, payload);
+    } else {
+      // last output
+      console.log(`Last function returnd (first entry): \n[${JSON.stringify(payload[0])},...]`);
     }
   } catch (e) {
-    console.error(e);
+    console.error(`${f.name} failed due to error: ${e}`);
   }
 }
 
@@ -72,13 +98,21 @@ function prewarm(functions) {
   try {
     for (const key in functions) {
       const func = functions[key];
-      reqPromises.push(axios.get({baseURL: func.url, url: "/ping"}));
+      reqPromises.push(axios.get(func.url + "/ping"));
     } 
   } catch (e) {
-    console.error(e);
+    console.log("literally unreachable");
+    console.error(`Failed prewarm due to: ${e}`);
   }
 
   return Promise.all(reqPromises);
 }
 
-main();
+function logLineToFile(line, filename) {
+  if (!fs.existsSync(filename)) {
+    fs.writeFileSync(filename, "");
+  }
+  fs.appendFile(filename, line + "\n", console.error);
+}
+
+main(true);

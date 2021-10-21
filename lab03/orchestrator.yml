@@ -1,5 +1,5 @@
 orchestrator:
-  prewarm: true
+  prewarm: false
   isParallel: false
 
   functions:
