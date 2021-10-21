@@ -37,9 +37,9 @@ Without the warmup we measured function execution time in ms:
 
 |      | Function 0 | function 1 | function 2 | function 3 | function 4 |
 | ---- | ---------- | ---------- | ---------- | ---------- | ---------- |
-| Min  | 71         | 112        | 111        | 112        | 115        |
-| Max  | 203        | 1128       | 227        | 283        | 293        |
-| Avg  | 89.65      | 148.14     | 130.28     | 131.70     | 141.93     |
+| Min  | 89         | 132        | 136        | 130        | 131        |
+| Max  | 3906       | 1279       | 1846       | 1241       | 1313       |
+| Avg  | 121.54     | 189.30     | 231.32     | 203.09     | 167.00     |
 
 Withe the warmup we measured:
 
@@ -49,4 +49,5 @@ Withe the warmup we measured:
 | Max  | 220        | 1195       | 355        | 336        | 363        |
 | Avg  | 91.91      | 148.82     | 132.86     | 135.01     | 146.79     |
 
-This is quite surprising for us. Even with a prewarmup the average and the max times are not lower but slightly higher. We are not entirely sure why this is happening.
+As we can see warmup can make quite an impact. 
+With the warmup enabled we were able to reduce the max and average timings quite a lot.
