@@ -1,0 +1,10 @@
+{
+    "api": {
+        "app_function": "app.app",
+        "profile_name": "default",
+        "project_name": "recommender_api",
+        "runtime": "python3.8",
+        "s3_bucket": "zappa-uhodpma9f",
+        "aws_region": "eu-central-1"
+    }
+}
