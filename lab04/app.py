@@ -35,6 +35,15 @@ def save_ratings():
   import_items("ratings", json.loads(request.data, use_decimal=True))
   return Response(status=204)
 
+@app.route("/recommendation", methods=["GET"])
+def get_recommendation():
+  # TODO implement
+  return {};
+
+@app.route("/recommendation", methods=["POST"])
+def start_recommendation():
+  return Response(status=204)
+
 def scan_entire_table(name):
   table = client.Table(name)
   response = table.scan(ReturnConsumedCapacity="TOTAL")
