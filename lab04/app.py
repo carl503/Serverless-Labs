@@ -1,5 +1,6 @@
 from decimal import Decimal
 import boto3
+from flask_cors.decorator import cross_origin
 import simplejson as json
 
 from flask import Flask, request, Response, request
@@ -8,6 +9,7 @@ app = Flask(__name__)
 client = boto3.resource("dynamodb")
 
 @app.route("/movies", methods=["GET"])
+@cross_origin(origins="https://fission.neat.moe")
 def get_movies():
   return json.dumps(scan_entire_table("movies"), use_decimal=True)
 
@@ -36,6 +38,7 @@ def save_ratings():
   return Response(status=204)
 
 @app.route("/recommendation", methods=["POST"])
+@cross_origin(origins="https://fission.neat.moe")
 def start_recommendation():
   step_function_cli = boto3.client("stepfunctions")
   response = step_function_cli.start_execution(
@@ -47,7 +50,8 @@ def start_recommendation():
   while(state_machine["status"] == "RUNNING"):
     state_machine = step_function_cli.describe_execution(executionArn=response["executionArn"])
   
-  return state_machine["output"]
+  print(state_machine)
+  return Response(state_machine["output"])
 
 @app.route("/users/create", methods=["POST"])
 def create_user_table():

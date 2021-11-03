@@ -5,7 +5,8 @@
         "project_name": "recommender_api",
         "runtime": "python3.8",
         "s3_bucket": "zappa-uhodpma9f",
-        "aws_region": "eu-central-1"
+        "aws_region": "eu-central-1",
+        "cors": true
     },
     "test": {
         "lambda_handler": "fetch_data.prepare_data",
