@@ -47,5 +47,13 @@
         "runtime": "python3.8",
         "s3_bucket": "zappa-uhodpma9f",
         "aws_region": "eu-central-1"
+    },
+    "test6": {
+        "lambda_handler": "recommender.calculate_recommendation_matrix",
+        "profile_name": "default",
+        "project_name": "test",
+        "runtime": "python3.8",
+        "s3_bucket": "zappa-uhodpma9f",
+        "aws_region": "eu-central-1"
     }
 }

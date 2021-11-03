@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import boto3
-import json
+import simplejson as json
 
 s3_client = boto3.resource("s3")
 
@@ -146,12 +146,15 @@ def calculate_movie_rating_matrix(event, context):
     movie_rating_matrix = {}
     for movie in movies:
         movie_rating_matrix[movie] = []
+        movie_int = movie
         for user in user_rating_matrix:
+            movie = str(movie)
+
             if movie in list(user_rating_matrix[user].keys()):
-                movie_rating_matrix[movie].append(user)
+                movie_rating_matrix[movie_int].append(user)
 
     return {
-        "user": event[0]["users"],
+        "users": event[0]["users"],
         "movie_rating_matrix": movie_rating_matrix,
         "user_rating_matrix": event[0]["user_rating_matrix"]
     }
@@ -160,7 +163,20 @@ def calculate_movie_rating_matrix(event, context):
 
 dict form {56789: 3.5, 12345: 4.9}
 """
-def calculate_recommendation_matrix(user, movie_rating_matrix, user_similarity_matrix, user_rating_matrix, user_unwatched_movies_matrix, item_based_user_rating_matrix = None, user_based = True):
+# user, movie_rating_matrix, user_similarity_matrix, user_rating_matrix, user_unwatched_movies_matrix, item_based_user_rating_matrix = None, user_based = True
+def calculate_recommendation_matrix(event, context):
+    client = boto3.resource("dynamodb")
+    user_based = True
+    user = json.loads(s3_client.Object("movierecommenderdata", "user.json").get()["Body"].read())
+    movie_rating_matrix = event[1]["movie_rating_matrix"]
+    user_similarity_matrix = json.loads(s3_client.Object("movierecommenderdata", "data2.json").get()["Body"].read())
+    user_rating_matrix = event[0]["user_rating_matrix"]
+    user_unwatched_movies_matrix = json.loads(s3_client.Object("movierecommenderdata", "data.json").get()["Body"].read())["user_unwatched_movies_matrix"]
+    item_based_user_rating_matrix = None
+    movie_table = client.Table("movies")
+    df_movies = pd.read_json(json.dumps(movie_table.scan()["Items"]), orient="records")
+
+    # Orig
     recommendations_matrix = {}
     if user_based:
         for uncommon_movie in user_unwatched_movies_matrix[user]:
@@ -170,7 +186,7 @@ def calculate_recommendation_matrix(user, movie_rating_matrix, user_similarity_m
                 if rated_by_user != user:
                     summe_zaehler += user_similarity_matrix[user][rated_by_user] * user_rating_matrix[rated_by_user][uncommon_movie]
                     summe_nenner += user_similarity_matrix[user][rated_by_user]
-            
+
             recommendations_matrix[uncommon_movie] = summe_zaehler / summe_nenner
     else:
         for unwatched_movie in user_unwatched_movies_matrix:
@@ -184,7 +200,7 @@ def calculate_recommendation_matrix(user, movie_rating_matrix, user_similarity_m
                     coefficient_sum += user_similarity_matrix[watched_movie][unwatched_movie]
             recommendations_matrix[unwatched_movie] = summe / coefficient_sum
 
-    return recommendations_matrix
+    return map_movie_id_to_title(getRecommendations(recommendations_matrix), df_movies)
 
 def getRecommendations(recommendation_matrix, top=3):
     sorted_recommendations = {}
@@ -197,7 +213,7 @@ def getRecommendations(recommendation_matrix, top=3):
 def map_movie_id_to_title(ids, df_movies):
     titles = []
     for movie_id in ids:
-        titles.append(df_movies[df_movies["id"] == movie_id]["title"].iloc[0])
+        titles.append(df_movies[df_movies["id"] == int(movie_id)]["title"].iloc[0])
     return titles
 
 def correct_wrong_user_data(user, movie_ratings_per_user, user_based = True):

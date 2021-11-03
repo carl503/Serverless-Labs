@@ -35,13 +35,32 @@ def save_ratings():
   import_items("ratings", json.loads(request.data, use_decimal=True))
   return Response(status=204)
 
-@app.route("/recommendation", methods=["GET"])
-def get_recommendation():
-  # TODO implement
-  return {};
-
 @app.route("/recommendation", methods=["POST"])
 def start_recommendation():
+  step_function_cli = boto3.client("stepfunctions")
+  response = step_function_cli.start_execution(
+    stateMachineArn="arn:aws:states:eu-central-1:532990971325:stateMachine:Movie-Recommendation-Lab04",
+    input=request.get_data(as_text=True)
+  )
+  print(response["executionArn"])
+  state_machine = step_function_cli.describe_execution(executionArn=response["executionArn"])
+  while(state_machine["status"] == "RUNNING"):
+    state_machine = step_function_cli.describe_execution(executionArn=response["executionArn"])
+  
+  return state_machine["output"]
+
+@app.route("/users/create", methods=["POST"])
+def create_user_table():
+  create_users_table()
+  return Response(status=204)
+
+@app.route("/users", methods=["GET"])
+def get_users():
+  return json.dumps(scan_entire_table("users"), use_decimal=True)
+
+@app.route("/users", methods=["POST"])
+def save_users():
+  import_users("users", json.loads(request.data, use_decimal=True))
   return Response(status=204)
 
 def scan_entire_table(name):
@@ -61,6 +80,11 @@ def import_items(table_name, items):
     print(f"Saving: {item}")
     table.put_item(Item=item)
 
+def import_users(table_name, users):
+  table = client.Table(table_name)
+  for user in users:
+    print(f"Saving: {user}")
+    table.put_item(Item={"user": user})
 
 def create_movies_table(): 
   client.create_table(
@@ -111,6 +135,27 @@ def create_ratings_table():
         "AttributeName": "id",
         "AttributeType": "N"
       },
+      {
+        "AttributeName": "user",
+        "AttributeType": "S"
+      }
+    ],
+    ProvisionedThroughput={
+            'ReadCapacityUnits': 10,
+            'WriteCapacityUnits': 10
+    }
+  )
+
+def create_users_table():
+  client.create_table(
+    TableName="users",
+    KeySchema=[
+      {
+        "AttributeName": "user",
+        "KeyType": "HASH"
+      }
+    ],
+    AttributeDefinitions=[
       {
         "AttributeName": "user",
         "AttributeType": "S"
