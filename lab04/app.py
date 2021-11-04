@@ -1,4 +1,3 @@
-from decimal import Decimal
 import boto3
 from flask_cors.decorator import cross_origin
 import simplejson as json
@@ -7,9 +6,10 @@ from flask import Flask, request, Response, request
 
 app = Flask(__name__)
 client = boto3.resource("dynamodb")
+step_function_cli = boto3.client("stepfunctions")
 
 @app.route("/movies", methods=["GET"])
-@cross_origin(origins="https://fission.neat.moe")
+@cross_origin()
 def get_movies():
   return json.dumps(scan_entire_table("movies"), use_decimal=True)
 
@@ -40,18 +40,33 @@ def save_ratings():
 @app.route("/recommendation", methods=["POST"])
 @cross_origin(origins="https://fission.neat.moe")
 def start_recommendation():
-  step_function_cli = boto3.client("stepfunctions")
   response = step_function_cli.start_execution(
     stateMachineArn="arn:aws:states:eu-central-1:532990971325:stateMachine:Movie-Recommendation-Lab04",
     input=request.get_data(as_text=True)
   )
-  print(response["executionArn"])
-  state_machine = step_function_cli.describe_execution(executionArn=response["executionArn"])
+  print()
+  
   while(state_machine["status"] == "RUNNING"):
     state_machine = step_function_cli.describe_execution(executionArn=response["executionArn"])
   
   print(state_machine)
-  return Response(state_machine["output"])
+  return Response(response["executionArn"])
+
+@app.route("/recommendation/status/<executionArn>")
+@cross_origin(origins="https://fission.neat.moe")
+def recommendation_status(executionArn):
+  state_machine = step_function_cli.describe_execution(executionArn=request.view_args[executionArn])
+  if state_machine["status"] == "RUNNING":
+    return {"state": "running"}
+  elif state_machine["status"] == "FAILED":
+    return {"state": "failed"}
+  elif state_machine["status"] == "SUCCEEDED":
+    return {
+      "state": "succeeded",
+      "data": state_machine["output"]
+    }
+  else:
+    return {"state": "unknown"}
 
 @app.route("/users/create", methods=["POST"])
 def create_user_table():
