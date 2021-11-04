@@ -35,3 +35,26 @@ But nevertheless we managed to make it fully funtional and our frontend can now 
 a json post request like: ```{"movieID": "1234", "user":"abby", "rating": 6}``` to the state machine and receives an executionArn. This executionArn can then be polled via an api endpoint. When the state machine completes the result will be returned. More about that in R8.
 
 ![State Machine](imgs/stepfunctions_graph.svg)
+
+
+### R8 - Private FaaS
+
+#### Setting up Fission
+
+The frontend of our movie recommender was deployed using [Fission](https://fission.io/) on the zhaw cloudlab and is available at [fission.neat.moe/movie](https://fission.neat.moe/movie).
+
+This required running our own Kubernetes cluster as fission is based upon kubernetes. To do this we setup [Kind](https://kind.sigs.k8s.io/) which is a Kubernetes cluster that can be easily run on a single machine using Docker. 
+
+In addition Kind also had to be configured to use [Metallb](https://kind.sigs.k8s.io/docs/user/loadbalancer/) in order for the cluster to be able to provide the LoadBalancer functionality required by fission. 
+
+Installing fission was then relatively straighforward and simply required following the installation guide. Additionally a [Cloudflare tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps) was setup in order to expose the service to the public without needing the zhaw vpn.
+
+#### Setting up a function in Fission
+
+- First we had to configure an environment for the function to run in using `fission environment create --name node --image fission/node-env --builder fission/node-builder`.
+- Then the function could be deployed using the created environment `fission fn create --name movie --code movie.js --env nodejs`
+- And lastly a route had to be setup in order for the function to be callable from the outside world `fission route create --function movie --url /movie --name movie`
+
+#### Overall results
+
+The setup for fission took quite a bit of research as well as trial and error to get everything up and running. However now that it's functional deploying new functions is very quick and easy.
