@@ -3,6 +3,7 @@ from flask_cors.decorator import cross_origin
 import simplejson as json
 
 from flask import Flask, request, Response, request
+from markupsafe import escape
 
 app = Flask(__name__)
 client = boto3.resource("dynamodb")
@@ -49,7 +50,7 @@ def start_recommendation():
 @app.route("/recommendation/status/<executionArn>")
 @cross_origin(origins="https://fission.neat.moe")
 def recommendation_status(executionArn):
-  state_machine = step_function_cli.describe_execution(executionArn=request.view_args[executionArn])
+  state_machine = step_function_cli.describe_execution(executionArn=escape(executionArn))
   if state_machine["status"] == "RUNNING":
     return {"state": "running"}
   elif state_machine["status"] == "FAILED":
