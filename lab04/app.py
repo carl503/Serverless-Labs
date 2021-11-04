@@ -44,12 +44,6 @@ def start_recommendation():
     stateMachineArn="arn:aws:states:eu-central-1:532990971325:stateMachine:Movie-Recommendation-Lab04",
     input=request.get_data(as_text=True)
   )
-  print()
-  
-  while(state_machine["status"] == "RUNNING"):
-    state_machine = step_function_cli.describe_execution(executionArn=response["executionArn"])
-  
-  print(state_machine)
   return Response(response["executionArn"])
 
 @app.route("/recommendation/status/<executionArn>")
