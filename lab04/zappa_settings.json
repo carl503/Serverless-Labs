@@ -6,7 +6,12 @@
         "runtime": "python3.8",
         "s3_bucket": "zappa-uhodpma9f",
         "aws_region": "eu-central-1",
-        "cors": true
+        "cors": true,
+        "extra_permissions": [{
+            "Effect": "Allow",
+            "Action": ["states:*"],
+            "Resource": "*"
+        }]
     },
     "test": {
         "lambda_handler": "fetch_data.prepare_data",
