@@ -14,6 +14,14 @@ of Google Cloud Functions. This was quite a challenge for us, because nobody in 
 group has ever worked with AWS services before. The biggest three issues were the
 quirks of DynamoDB, the permission system IAM and the maximum output size in the state machine.
 
+## Architecture
+
+Our architecture is unfortunately pretty complicated.
+This diagram is simplified and covers not every detail.
+It is only to show which technologies were used.
+
+![architecture](imgs/architecture.png) 
+
 ## Implementation
 
 ### R1 - Deployment Framework
