@@ -9,7 +9,7 @@ def prepare_data(event, context):
   rating_table = client.Table("ratings")
   movie_table = client.Table("movies")
 
-  rating_table.put_item(Item={"id": event["movieID"], "user": event["user"], "rating": event["rating"]})
+  rating_table.put_item(Item={"id": int(event["movieID"]), "user": event["user"], "rating": event["rating"]})
 
 
   df_uratings = pd.read_json(json.dumps(rating_table.scan()["Items"]), orient="records")
