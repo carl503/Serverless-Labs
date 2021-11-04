@@ -102,7 +102,7 @@ const template = `
                 },
                 body: JSON.stringify(data)
             })
-            .then(response => response.json())
+            .then(response => response.text())
             .then(data => {
         
                 let invervalID = setInterval(() => {
@@ -113,6 +113,7 @@ const template = `
                         if(d.state === "succeeded") {
                             clearInterval(invervalID);
                             console.log('Success:', d)
+                            d.data = JSON.parse(d.data)
                             for (let i = 0; i < d.data.length; i++) {
                                 $("#tableContent").append(\`<tr><td>\${d.data[i]}</td></tr>\`)
                             }
@@ -159,4 +160,3 @@ module.exports = async function(context) {
         body: template
     };
 }
-
