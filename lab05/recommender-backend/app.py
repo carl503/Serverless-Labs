@@ -9,7 +9,9 @@ CORS(app)
 
 
 @app.route("/", methods=["POST", "GET"])
-@app.route("/recommend", methods=["GET"])
+@app.route("/recommend", methods=["GET", "POST"])
+@app.route("/clear", methods=["POST"])
+@app.route("/cpu", methods=["GET"])
 def index():
     return main.entrypoint(flask.request)
 
