@@ -7,7 +7,7 @@ services:
     depends_on:
       - db
     ports:
-      - 8080:8080
+      - 8081:8080
     environment:
       - DB_USER=${DB_USER}
       - DB_PASS=${DB_PASS}
@@ -32,7 +32,21 @@ services:
     depends_on:
       - db
     ports:
-      - 8081:8080
+      - 8082:8080
+    environment:
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - DB_NAME=${DB_NAME}
+      - DB_HOST=db
+      - PORT=8080
+
+  analytics:
+    container_name: analytics
+    image: analytics:latest
+    depends_on:
+      - db
+    ports:
+      - 8083:8080
     environment:
       - DB_USER=${DB_USER}
       - DB_PASS=${DB_PASS}
