@@ -21,10 +21,10 @@ services:
     container_name: db
     restart: always
     environment:
-      - MYSQL_ROOT_PASSWORD=scad
-      - MARIADB_DATABASE=scad
-      - MARIADB_USER=scad
-      - MARIADB_PASSWORD=scad
+      - MYSQL_ROOT_PASSWORD=${DB_PASS}
+      - MARIADB_DATABASE=${DB_NAME}
+      - MARIADB_USER=${DB_USER}
+      - MARIADB_PASSWORD=${DB_PASS}
 
   frontend:
     container_name: frontend
