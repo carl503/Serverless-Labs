@@ -13,4 +13,6 @@ RUN apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y nodejs npm
 RUN npm i
 
+EXPOSE $PORT
+
 ENTRYPOINT ["node", "."]
