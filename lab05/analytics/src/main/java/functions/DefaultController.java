@@ -39,10 +39,10 @@ public class DefaultController {
 
     private void queryData(Map<String, Object> context) {
         String url = String.format("jdbc:mysql://%s:3306/%s",
-                System.getenv("SQL_HOST"), System.getenv("SQL_DB"));
+                System.getenv("DB_HOST"), System.getenv("DB_NAME"));
 
-        String userName = System.getenv("SQL_USER");
-        String password = System.getenv("SQL_PASS");
+        String userName = System.getenv("DB_USER");
+        String password = System.getenv("DB_PASS");
 
         Base.open("com.mysql.cj.jdbc.Driver", url, userName, password);
         if (Base.hasConnection()) {
