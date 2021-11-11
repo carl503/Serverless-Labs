@@ -76,7 +76,7 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
     <script>
-        const recommendAPIBase = "https://recommender-backend-wavwpzrrpq-oa.a.run.app"
+        const recommendAPIBase = window.location.host === "form-frontend-wavwpzrrpq-oa.a.run.app" ? "https://recommender-backend-wavwpzrrpq-oa.a.run.app" : "http://localhost:8081"
 
 
         function submitForm() {
