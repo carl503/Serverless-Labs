@@ -3,7 +3,7 @@ version: "3"
 services:
   recommender:
     container_name: recommender
-    image: recommender-backend:latest
+    image: carl503/recommender-backend:latest
     depends_on:
       - db
     ports:
@@ -28,7 +28,7 @@ services:
 
   frontend:
     container_name: frontend
-    image: form-frontend:latest
+    image: carl503/form-frontend:latest
     depends_on:
       - db
     ports:
@@ -42,7 +42,7 @@ services:
 
   analytics:
     container_name: analytics
-    image: analytics:latest
+    image: carl503/analytics:latest
     depends_on:
       - db
     ports:
