@@ -1,0 +1,3 @@
+[container.image]
+name="generator"
+tag="latest"

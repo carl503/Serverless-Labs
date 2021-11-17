@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  frontend:
+    container_name: frontend
+    image: frontend
+    ports:
+     - 9090:9090
+    restart: always
+    environment:
+      - PORT=9090
+      - HOST=fizzBuzzGenerator
+    depends_on:
+      - fizzBuzzGenerator
+      
+  fizzBuzzGenerator:
+    container_name: fizzbuzzgen
+    image: generator
+    restart: always
+    depends_on:
+      - fizzBuzzCounter
+    environment:
+      - PORT=80
+      - HOST=fizzBuzzCounter
+
+  fizzBuzzCounter:
+    container_name: counter
+    image: counter
+    restart: always
+    environment:
+      - PORT=80
