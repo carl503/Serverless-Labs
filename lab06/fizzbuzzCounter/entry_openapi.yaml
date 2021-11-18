@@ -1,0 +1,29 @@
+openapi: 3.0.1
+info:
+  title: Entry Openapi Yaml
+  version: 1.0.0
+servers:
+- url: "{server}:{port}/"
+  variables:
+    server:
+      default: http://localhost
+    port:
+      default: listenPort
+paths:
+  /countFizzBuzzes:
+    post:
+      operationId: operation_post_/countFizzBuzzes
+      requestBody:
+        content:
+          application/json:
+            schema: {}
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+        "500":
+          description: Found unexpected output
+components: {}
