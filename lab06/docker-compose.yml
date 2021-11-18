@@ -3,7 +3,7 @@ version: '3'
 services:
   frontend:
     container_name: frontend
-    image: frontend
+    image: carl503/fizzfrontend
     ports:
      - 9090:9090
     restart: always
@@ -15,7 +15,7 @@ services:
       
   fizzBuzzGenerator:
     container_name: fizzbuzzgen
-    image: generator
+    image: carl503/fizzgenerator
     restart: always
     depends_on:
       - fizzBuzzCounter
@@ -25,7 +25,7 @@ services:
 
   fizzBuzzCounter:
     container_name: counter
-    image: counter
+    image: carl503/fizzcounter
     restart: always
     environment:
       - PORT=80
