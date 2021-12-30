@@ -7,7 +7,7 @@ from bleak import BleakScanner
 
 running = True
 cond = Condition()
-api_url = os.environ.get("SUBMIT_API", "https://lmao.example.com/submit")
+api_url = os.environ.get("SUBMIT_API", "https://lab08api-bc5wazhcdq-oa.a.run.app/data")
 
 
 def main():
@@ -49,17 +49,17 @@ def post_data(mac: str, rssi: int):
     obj = {
         "mac": mac,
         "rssi": rssi,
-        "timestamp": time.time() * 1_000
+        "timestamp": int(time.time() * 1_000)
     }
 
-    resp = requests.post(api_url, data=obj)
+    resp = requests.post(api_url, json=obj)
 
     if resp.status_code != 204:
         raise Exception(f"Could not post data to api: {resp.text}")
 
 
 class BeaconInteraction(Thread):
-    def __init__(self, beacon_id: str, loop, timeout: int = 30):
+    def __init__(self, beacon_id: str, loop, timeout: int = 5):
         Thread.__init__(self)
         self.beacon_id = beacon_id
         self.timeout = timeout
@@ -74,8 +74,8 @@ class BeaconInteraction(Thread):
 
     async def poll_distance(self):
         device = await BleakScanner.find_device_by_address(self.beacon_id, timeout=self.timeout)
-        post_data(self.beacon_id, device.rssi)
         if device is not None:
+            post_data(self.beacon_id, device.rssi)
             print(f"{self.beacon_id} distance: {device.rssi}")
         else:
             print(f"could not read value of {self.beacon_id}")
