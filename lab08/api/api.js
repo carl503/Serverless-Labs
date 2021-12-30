@@ -33,7 +33,7 @@ app.post("/data", async (req, res) => {
   const data = req.body
   await client.connect()
 
-  if (data?.mac && data?.rssi) {
+  if (data?.mac && data?.rssi && data?.timestamp) {
     await coll.insertOne(data)
     res.sendStatus(204).end()
     await client.close()
