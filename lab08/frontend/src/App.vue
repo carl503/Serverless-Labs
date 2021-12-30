@@ -50,9 +50,7 @@ let durationResetValue = 0;
 function startTimer(): void {
   intervalResetValue = intervalMinutes.value;
   durationResetValue = durationMinutes.value;
-  
   setInterval(startInterval, 1000);
-  
 }
 
 function startInterval(): void {
@@ -72,12 +70,11 @@ function updateTimer(_minutes: Ref<number>, _seconds: Ref<number>) {
   if (_seconds.value > 0 && _minutes.value >= 0) {
     _seconds.value--
   } else if (_minutes.value > 0) {
-    _seconds.value = 5
+    _seconds.value = 59
     _minutes.value--
   }
   console.log(`Minutes: ${_minutes.value} Seconds: ${_seconds.value}`);
 }
-
 </script>
 
 <style>
