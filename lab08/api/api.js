@@ -1,4 +1,5 @@
 import express from "express"
+import cors from "cors"
 import { MongoClient } from "mongodb"
 
 const app = express()
@@ -20,6 +21,7 @@ async function setup() {
 setup()
 
 app.use(express.json())
+app.use(cors())
 
 const port = process.env.PORT || 8080
 
