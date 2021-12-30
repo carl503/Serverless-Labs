@@ -63,6 +63,8 @@ app.post("/move", async (req, res) => {
   let hasMoved = false
 
   if (data?.interval >= 0 && data?.duration >= 0 && data?.timestamp > 0) {
+    console.log(`received move request with data: ${JSON.stringify(data)}`)
+
     const beforeDurationAvg = {}
     const afterDurationAvg = {}
     const dataBeforeDuration = data.timestamp + data.interval - data.duration
@@ -84,7 +86,10 @@ app.post("/move", async (req, res) => {
 
     for (const [mac, avg] of Object.entries(beforeDurationAvg)) {
       const avgNew = afterDurationAvg[mac]
-      if (Math.abs(avg) / Math.abs(avgNew) > movementPercentage) {
+      const movementDetected = Math.abs(avg) / Math.abs(avgNew) > movementPercentage;
+      console.log(`${mac}: has an average of ${avg} with an new avg of ${avgNew}`);
+      console.log(`movement was dected: ${movementDetected}`)
+      if (movementDetected) {
         hasMoved = true
       }
     }
