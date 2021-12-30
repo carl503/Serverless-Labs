@@ -49,7 +49,7 @@ def post_data(mac: str, rssi: int):
     obj = {
         "mac": mac,
         "rssi": rssi,
-        "timestamp": time.time()
+        "timestamp": time.time() * 1_000
     }
 
     resp = requests.post(api_url, data=obj)
