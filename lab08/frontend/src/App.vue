@@ -40,16 +40,27 @@
 <script setup lang="ts">
 import { ref } from "@vue/reactivity";
 import { Ref } from "vue";
+import axios from "axios";
+
+interface TimerData {
+  interval: number;
+  duration: number;
+  timestamp: number;
+}
+
+const apiUrl = process.env.API_URL || "https://lab08api-bc5wazhcdq-oa.a.run.app";
 const durationMinutes = ref(5);
 const durationSeconds = ref(0);
 const intervalMinutes = ref(60)
 const intervalSeconds = ref(0);
 let intervalResetValue = 0;
 let durationResetValue = 0;
+let timestamp = 0;
 
 function startTimer(): void {
   intervalResetValue = intervalMinutes.value;
   durationResetValue = durationMinutes.value;
+  timestamp = Date.now()
   setInterval(startInterval, 1000);
 }
 
@@ -58,6 +69,18 @@ function startInterval(): void {
     if (durationMinutes.value === 0 && durationSeconds.value === 0) {
       intervalMinutes.value = intervalResetValue;
       durationMinutes.value = durationResetValue;
+
+      const data: TimerData = {
+        interval: minutesToMilliseconds(intervalResetValue),
+        duration: minutesToMilliseconds(durationResetValue),
+        timestamp: timestamp,
+      }
+
+      axios.post(`${apiUrl}/move`, data).then((res) => {
+        console.log(res);
+      })
+      
+      timestamp = Date.now()
     } else {
       updateTimer(durationMinutes, durationSeconds);
     }
@@ -75,6 +98,8 @@ function updateTimer(_minutes: Ref<number>, _seconds: Ref<number>) {
   }
   console.log(`Minutes: ${_minutes.value} Seconds: ${_seconds.value}`);
 }
+
+const minutesToMilliseconds = (min: number) => min * 60 * 1000;
 </script>
 
 <style>
