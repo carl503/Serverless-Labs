@@ -2,7 +2,7 @@ import express from "express"
 import { MongoClient } from "mongodb"
 
 const app = express()
-const url = process.env.MONGO_URL || "mongodb+srv://admin:8F2b2VtEsSjpiSTzHoWjECaS@scad-austin.0j2rn.mongodb.net/test"
+const url = process.env.MONGO_URL
 const client = new MongoClient(url)
 const database = client.db("scad-movy")
 const COLLECTION = "data"
