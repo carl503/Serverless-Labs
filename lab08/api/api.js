@@ -68,7 +68,7 @@ app.post("/move", async (req, res) => {
     const beforeDurationAvg = {}
     const afterDurationAvg = {}
     const dataBeforeDuration = data.timestamp + data.interval - data.duration
-    const dataAfterDuration = data.timestamp + data.interval + data.duration
+    const dataAfterDuration = data.timestamp + data.interval
     const movementActivityBeforeDuration = await coll.find({"timestamp": { "$gt": dataBeforeDuration, "$lte": dataBeforeDuration + data.duration}}).toArray()
     const movementActivityAfterDuration = await coll.find({"timestamp": { "$gt": dataAfterDuration }}).toArray()
     
@@ -83,6 +83,9 @@ app.post("/move", async (req, res) => {
     
     calcAverageForArr(movementActivityBeforeDuration, beforeDurationAvg)
     calcAverageForArr(movementActivityAfterDuration, afterDurationAvg)
+
+    console.log(`old average: ${JSON.stringify(beforeDurationAvg)}`)
+    console.log(`new average: ${JSON.stringify(afterDurationAvg)}`)
 
     for (const [mac, avg] of Object.entries(beforeDurationAvg)) {
       const avgNew = afterDurationAvg[mac]
