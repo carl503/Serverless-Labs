@@ -3,11 +3,11 @@
     <div class="columns is-flex is-flex-wrap-wrap is-vcentered is-fullheight">
       <div class="column is-12">
         <span class="title" v-if="intervalMinutes > 0 || intervalSeconds > 0">
-          Bewegen in {{intervalMinutes}}:{{(intervalSeconds).toString().padStart(2, 0)}}
+          Bewegen in {{intervalMinutes}}:{{addPaddingToSeconds(intervalSeconds)}}
         </span>
 
         <span class="title" v-else>
-          Bewegen für {{durationMinutes}}:{{(durationSeconds).toString().padStart(2, 0)}} Minuten
+          Bewegen für {{durationMinutes}}:{{addPaddingToSeconds(durationSeconds)}} Minuten
         </span>
       </div>
       <div class="column is-12">
@@ -57,6 +57,9 @@ let intervalResetValue = 0;
 let durationResetValue = 0;
 let timestamp = 0;
 
+const minutesToMilliseconds = (min: number) => min * 60 * 1000;
+const addPaddingToSeconds = (sec: number) => (sec).toString().padStart(2, "0");
+
 function startTimer(): void {
   intervalResetValue = intervalMinutes.value;
   durationResetValue = durationMinutes.value;
@@ -98,8 +101,6 @@ function updateTimer(_minutes: Ref<number>, _seconds: Ref<number>) {
   }
   console.log(`Minutes: ${_minutes.value} Seconds: ${_seconds.value}`);
 }
-
-const minutesToMilliseconds = (min: number) => min * 60 * 1000;
 </script>
 
 <style>
