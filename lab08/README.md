@@ -10,7 +10,7 @@ Right now the application is only supported on laptops or other devices that can
 
 ## Flyer & Video
 
-You can find the flyer [here](./flyer.pdf) and the video is available [here (TODO ADD LINK REMOVE THIS)](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
+You can find the flyer [here](./flyer.pdf) and the video is available [here](./video.mp4)
 
 ## Usage
 
