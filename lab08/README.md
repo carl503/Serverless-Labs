@@ -12,7 +12,7 @@ Right now the application is only supported on laptops or other devices that can
 
 You can find the flyer [here](./flyer.pdf) and the video is available [here (TODO ADD LINK REMOVE THIS)](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
 
-### Usage
+## Usage
 
 ![Frontend website](./img/movy.png)
 
