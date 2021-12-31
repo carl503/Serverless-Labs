@@ -34,6 +34,21 @@
         </div>
       </div>
     </div>
+
+    <div class="message is-floating" v-if="isMessageVisible" :class="hasMoved ? 'is-success' : 'is-danger'">
+      <div class="message-header">
+        <p v-if="hasMoved">Bewegung erkannt</p>
+        <p v-else>Keine Bewegung erkannt</p>
+        <button class="delete" aria-label="delete" @click="isMessageVisible = false"></button>
+      </div>
+      <div class="message-body">
+        <span v-if="hasMoved">Sie haben sich bewegt, stelle den Timer erneut</span>
+        <span v-else>Sie haben sich leider nicht bewegt :(</span>
+        <figure class="image is-128x128" v-if="!hasMoved">
+          <img src="https://laughingsquid.com/wp-content/uploads/2016/06/gxrb_bn-iwbd1o7gyrsxyojbeilmz45j7zmzcaxf77y.jpg">
+        </figure>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -53,6 +68,8 @@ const durationMinutes = ref(5);
 const durationSeconds = ref(0);
 const intervalMinutes = ref(60)
 const intervalSeconds = ref(0);
+const isMessageVisible = ref(false);
+const hasMoved = ref(false);
 let intervalResetValue = 0;
 let durationResetValue = 0;
 let timestamp = 0;
@@ -70,9 +87,6 @@ function startTimer(): void {
 function startInterval(): void {
   if (intervalMinutes.value === 0 && intervalSeconds.value === 0) {
     if (durationMinutes.value === 0 && durationSeconds.value === 0) {
-      intervalMinutes.value = intervalResetValue;
-      durationMinutes.value = durationResetValue;
-
       const data: TimerData = {
         interval: minutesToMilliseconds(intervalResetValue),
         duration: minutesToMilliseconds(durationResetValue),
@@ -80,10 +94,12 @@ function startInterval(): void {
       }
 
       axios.post(`${apiUrl}/move`, data).then((res) => {
-        console.log(res);
+        hasMoved.value = res.data;
+        isMessageVisible.value = true;
+        intervalMinutes.value = intervalResetValue;
+        durationMinutes.value = durationResetValue;
+        timestamp = Date.now()
       })
-      
-      timestamp = Date.now()
     } else {
       updateTimer(durationMinutes, durationSeconds);
     }
@@ -108,5 +124,11 @@ function updateTimer(_minutes: Ref<number>, _seconds: Ref<number>) {
 
 .is-fullheight {
   height: 100vh;
+}
+
+.is-floating {
+  position: absolute;
+  top: 2rem;
+  right: 0;
 }
 </style>
